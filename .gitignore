@@ -1,0 +1,5 @@
+.venv/
+*.duckdb
+*.DAT
+02202307_TOTA/
+.ipynb_checkpoints/

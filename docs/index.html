@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Estimación 29N</title>
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--mut:#666;--line:#e3e3e3;--card:#f4f4f4}
+@media(prefers-color-scheme:dark){:root{--bg:#121212;--fg:#eee;--mut:#9a9a9a;--line:#2e2e2e;--card:#1e1e1e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,sans-serif}
+main{max-width:900px;margin:0 auto;padding:24px 16px 56px}
+h1{font-size:1.7rem;margin:0 0 4px}
+h2{font-size:1.1rem;margin:0 0 2px}
+.mut{color:var(--mut);font-size:.88rem}
+.lead{font-size:1.05rem;margin:12px 0 0}
+.panel{background:var(--card);border-radius:14px;padding:16px;margin-top:16px}
+svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;margin-top:8px;font-size:.88rem}
+.chip i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+.rings{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:16px}
+.ring{background:var(--card);border-radius:14px;padding:14px;text-align:center}
+.ring svg{width:110px;margin:0 auto 4px}
+.ring span{display:block;font-size:.9rem}
+.ax{font-size:11px;fill:var(--mut)}
+.big{font-size:46px;font-weight:700;fill:var(--fg)}
+.rt{font-size:17px;font-weight:700;fill:var(--fg)}
+.lab{font-size:12px;font-weight:600}
+.row{display:grid;grid-template-columns:110px 1fr 120px;gap:8px;align-items:center;padding:3px 0;font-size:.9rem}
+.track{position:relative;height:16px;background:var(--bg);border-radius:4px}
+.bar{position:absolute;top:0;left:0;height:100%;border-radius:4px;opacity:.85}
+.wh{position:absolute;top:7px;height:2px;background:var(--fg)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+th,td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:right}
+th:first-child,td:first-child{text-align:left}
+details{margin-top:16px}summary{cursor:pointer;font-weight:600}
+ul{padding-left:20px;margin:8px 0 0}li{margin-bottom:6px}
+</style></head><body><main>
+<h1>Estimación de escaños · Generales 29N</h1>
+<div class="mut" id="sub"></div>
+<p class="lead" id="lead"></p>
+
+<div class="panel">
+<h2>Escenario central</h2>
+<div class="mut">350 escaños del Congreso con la media actual de encuestas (cada punto es un escaño)</div>
+<div id="hemi"></div><div class="legend" id="leg"></div>
+</div>
+
+<div class="rings" id="rings"></div>
+
+<div class="panel">
+<h2>¿Cuánto varía el resultado?</h2>
+<div class="mut">Escaños del bloque en cada una de las simulaciones. La línea marca la mayoría absoluta (176).</div>
+<div id="hist"></div><div class="legend" id="hleg"></div>
+</div>
+
+<div class="panel">
+<h2>Evolución de las encuestas</h2>
+<div class="mut">Cada punto es una encuesta; la línea es la media móvil de 15 días (simple, no es la media ponderada del modelo).</div>
+<div id="polls"></div><div class="legend" id="pleg"></div>
+</div>
+
+<div class="panel">
+<h2>Rango de escaños por partido</h2>
+<div class="mut">Barra: media de las simulaciones. Línea negra: rango del 90 %.</div>
+<div id="bars" style="margin-top:8px"></div>
+</div>
+
+<details class="panel"><summary>Encuestas usadas en la media</summary>
+<div style="overflow-x:auto;margin-top:8px"><table id="tab"></table></div></details>
+
+<details class="panel"><summary>Metodología y límites</summary><ul id="met"></ul></details>
+</main><script>
+const D = {"generado": "2026-10-30", "ultima_encuesta": "2026-10-25", "desde": "2026-07-27", "n_sim": 2000, "sd_nac": 0.07, "sd_prov": 0.08, "medias": {"PP": 31.1, "PSOE": 27.0, "VOX": 19.0, "SUMAR": 8.9}, "central": {"B.N.G.": 1, "CCa": 1, "EAJ-PNV": 6, "EH Bildu": 7, "ERC": 7, "JxCAT - JUNTS": 7, "PP": 127, "PSOE": 108, "SUMAR": 18, "U.P.N.": 1, "VOX": 67}, "escanos": [{"partido": "PP", "e2023": 137, "media": 128, "p5": 115, "p95": 142}, {"partido": "PSOE", "e2023": 121, "media": 108, "p5": 97, "p95": 121}, {"partido": "VOX", "e2023": 33, "media": 67, "p5": 57, "p95": 77}, {"partido": "SUMAR", "e2023": 31, "media": 18, "p5": 13, "p95": 23}, {"partido": "EH Bildu", "e2023": 6, "media": 7, "p5": 6, "p95": 7}, {"partido": "ERC", "e2023": 7, "media": 7, "p5": 7, "p95": 8}, {"partido": "JxCAT - JUNTS", "e2023": 7, "media": 7, "p5": 5, "p95": 8}, {"partido": "EAJ-PNV", "e2023": 5, "media": 6, "p5": 5, "p95": 6}, {"partido": "B.N.G.", "e2023": 1, "media": 1, "p5": 1, "p95": 2}, {"partido": "CCa", "e2023": 1, "media": 1, "p5": 1, "p95": 2}, {"partido": "U.P.N.", "e2023": 1, "media": 1, "p5": 1, "p95": 1}, {"partido": "CUP-PR", "e2023": 0, "media": 0, "p5": 0, "p95": 1}, {"partido": "NC-bc", "e2023": 0, "media": 0, "p5": 0, "p95": 1}], "prob": {"pp_vox": 0.996, "izq": 0.0025, "pp_gt_psoe": 0.914}, "hist": {"edges": [120, 124, 128, 132, 136, 140, 144, 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228], "A": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 24, 60, 158, 327, 438, 421, 308, 163, 60, 24, 7, 2, 0], "B": [0, 1, 2, 10, 36, 82, 199, 378, 425, 414, 265, 122, 43, 18, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "mediaA": 195.485, "mediaB": 154.2515}, "serie": [{"f": "2026-08-01", "c": "EM-Analytics", "PP": 32.5, "PSOE": 27.2, "VOX": 18.6, "SUMAR": 9.600000000000001}, {"f": "2026-08-04", "c": "NC Report", "PP": 34.2, "PSOE": 25.2, "VOX": 18.0, "SUMAR": 9.4}, {"f": "2026-08-06", "c": "SocioMétrica", "PP": 33.8, "PSOE": 26.0, "VOX": 17.0, "SUMAR": 8.600000000000001}, {"f": "2026-08-07", "c": "EM-Analytics", "PP": 32.1, "PSOE": 26.2, "VOX": 19.1, "SUMAR": 10.1}, {"f": "2026-08-12", "c": "EM-Analytics", "PP": 31.8, "PSOE": 26.2, "VOX": 19.2, "SUMAR": 10.2}, {"f": "2026-08-21", "c": "EM-Analytics", "PP": 32.0, "PSOE": 26.1, "VOX": 19.0, "SUMAR": 9.9}, {"f": "2026-08-25", "c": "Cluster17", "PP": 30.1, "PSOE": 28.1, "VOX": 16.1, "SUMAR": 9.7}, {"f": "2026-08-26", "c": "Sigma Dos", "PP": 33.1, "PSOE": 25.4, "VOX": 17.9, "SUMAR": 9.399999999999999}, {"f": "2026-08-27", "c": "Data10", "PP": 34.3, "PSOE": 25.4, "VOX": 18.1, "SUMAR": 9.9}, {"f": "2026-08-28", "c": "EM-Analytics", "PP": 32.3, "PSOE": 25.7, "VOX": 19.0, "SUMAR": 10.0}, {"f": "2026-08-28", "c": "More in Common", "PP": 28.7, "PSOE": 27.0, "VOX": 20.3, "SUMAR": 10.2}, {"f": "2026-09-02", "c": "40dB", "PP": 32.4, "PSOE": 27.6, "VOX": 17.8, "SUMAR": 8.5}, {"f": "2026-09-03", "c": "NC Report", "PP": 34.5, "PSOE": 24.9, "VOX": 18.3, "SUMAR": 9.1}, {"f": "2026-09-03", "c": "EM-Analytics", "PP": 32.0, "PSOE": 25.6, "VOX": 19.2, "SUMAR": 10.3}, {"f": "2026-09-03", "c": "GAD3", "PP": 31.1, "PSOE": 26.1, "VOX": 19.2, "SUMAR": 10.1}, {"f": "2026-09-04", "c": "CIS", "PP": 29.5, "PSOE": 27.6, "VOX": 17.6, "SUMAR": 10.7}, {"f": "2026-09-04", "c": "CIS", "PP": 31.9, "PSOE": 26.8, "VOX": 17.8, "SUMAR": 9.5}, {"f": "2026-09-04", "c": "CIS", "PP": 25.5, "PSOE": 31.0, "VOX": 16.6, "SUMAR": 9.4}, {"f": "2026-09-08", "c": "Hamalgama Métrica", "PP": 33.6, "PSOE": 25.1, "VOX": 19.3, "SUMAR": 9.399999999999999}, {"f": "2026-09-10", "c": "EM-Analytics", "PP": 32.2, "PSOE": 25.4, "VOX": 19.2, "SUMAR": 10.3}, {"f": "2026-09-10", "c": "Target Point", "PP": 31.5, "PSOE": 25.6, "VOX": 18.9, "SUMAR": 9.7}, {"f": "2026-09-11", "c": "InvyMark", "PP": 33.7, "PSOE": 26.8, "VOX": 18.6, "SUMAR": 9.399999999999999}, {"f": "2026-09-18", "c": "EM-Analytics", "PP": 32.1, "PSOE": 25.6, "VOX": 19.1, "SUMAR": 10.1}, {"f": "2026-09-21", "c": "DYM", "PP": 34.7, "PSOE": 26.3, "VOX": 17.3, "SUMAR": 8.2}, {"f": "2026-09-21", "c": "Celeste-Tel", "PP": 33.9, "PSOE": 25.4, "VOX": 17.8, "SUMAR": 9.7}, {"f": "2026-09-25", "c": "EM-Analytics", "PP": 32.3, "PSOE": 25.3, "VOX": 18.8, "SUMAR": 10.3}, {"f": "2026-09-26", "c": "SocioMétrica", "PP": 33.9, "PSOE": 25.7, "VOX": 18.0, "SUMAR": 9.0}, {"f": "2026-09-28", "c": "40dB", "PP": 31.6, "PSOE": 27.4, "VOX": 18.4, "SUMAR": 8.3}, {"f": "2026-10-01", "c": "Sigma Dos", "PP": 32.6, "PSOE": 25.6, "VOX": 18.3, "SUMAR": 9.899999999999999}, {"f": "2026-10-01", "c": "Winston", "PP": 31.3, "PSOE": 24.9, "VOX": 19.1, "SUMAR": 10.7}, {"f": "2026-10-01", "c": "Ateneo del Dato", "PP": 33.2, "PSOE": 27.5, "VOX": 19.2, "SUMAR": 10.3}, {"f": "2026-10-02", "c": "Data10", "PP": 34.0, "PSOE": 26.1, "VOX": 18.6, "SUMAR": 9.5}, {"f": "2026-10-03", "c": "SocioMétrica", "PP": 33.4, "PSOE": 26.5, "VOX": 18.1, "SUMAR": 8.4}, {"f": "2026-10-03", "c": "EM-Analytics", "PP": 31.3, "PSOE": 26.9, "VOX": 19.4, "SUMAR": 9.7}, {"f": "2026-10-06", "c": "NC Report", "PP": 34.1, "PSOE": 25.0, "VOX": 18.2, "SUMAR": 9.2}, {"f": "2026-10-06", "c": "CIS", "PP": 22.2, "PSOE": 34.0, "VOX": 17.1, "SUMAR": 9.2}, {"f": "2026-10-06", "c": "CIS", "PP": 28.3, "PSOE": 28.6, "VOX": 17.5, "SUMAR": 10.9}, {"f": "2026-10-06", "c": "CIS", "PP": 28.0, "PSOE": 28.0, "VOX": 17.8, "SUMAR": 10.8}, {"f": "2026-10-07", "c": "DYM", "PP": 34.0, "PSOE": 28.2, "VOX": 18.2, "SUMAR": 7.2}, {"f": "2026-10-07", "c": "IMOP", "PP": 30.4, "PSOE": 26.5, "VOX": 19.0, "SUMAR": 9.899999999999999}, {"f": "2026-10-08", "c": "40dB", "PP": 31.9, "PSOE": 28.1, "VOX": 18.9, "SUMAR": 7.6}, {"f": "2026-10-08", "c": "GESOP", "PP": 28.7, "PSOE": 26.1, "VOX": 18.9, "SUMAR": 10.6}, {"f": "2026-10-08", "c": "GAD3", "PP": 31.4, "PSOE": 26.4, "VOX": 18.2, "SUMAR": 9.7}, {"f": "2026-10-08", "c": "InvyMark", "PP": 32.8, "PSOE": 28.0, "VOX": 18.8, "SUMAR": 9.5}, {"f": "2026-10-08", "c": "Sigma Dos", "PP": 31.9, "PSOE": 25.3, "VOX": 19.1, "SUMAR": 10.7}, {"f": "2026-10-08", "c": "Hamalgama Métrica", "PP": 33.4, "PSOE": 25.3, "VOX": 19.6, "SUMAR": 8.7}, {"f": "2026-10-09", "c": "EM-Analytics", "PP": 31.5, "PSOE": 26.9, "VOX": 19.1, "SUMAR": 9.4}, {"f": "2026-10-09", "c": "Target Point", "PP": 32.0, "PSOE": 25.9, "VOX": 18.7, "SUMAR": 10.3}, {"f": "2026-10-11", "c": "SocioMétrica", "PP": 32.6, "PSOE": 26.2, "VOX": 18.8, "SUMAR": 8.6}, {"f": "2026-10-14", "c": "Sigma Dos", "PP": 31.5, "PSOE": 25.3, "VOX": 19.5, "SUMAR": 10.0}, {"f": "2026-10-16", "c": "IMOP", "PP": 28.5, "PSOE": 27.1, "VOX": 20.0, "SUMAR": 10.8}, {"f": "2026-10-17", "c": "EM-Analytics", "PP": 31.8, "PSOE": 27.1, "VOX": 18.9, "SUMAR": 6.9}, {"f": "2026-10-22", "c": "Sigma Dos", "PP": 30.6, "PSOE": 26.1, "VOX": 19.9, "SUMAR": 10.2}, {"f": "2026-10-22", "c": "Ateneo del Dato", "PP": 31.1, "PSOE": 27.6, "VOX": 19.8, "SUMAR": 9.5}, {"f": "2026-10-23", "c": "EM-Analytics", "PP": 30.9, "PSOE": 26.7, "VOX": 19.0, "SUMAR": 7.5}, {"f": "2026-10-24", "c": "NC Report", "PP": 33.1, "PSOE": 25.8, "VOX": 19.0, "SUMAR": 9.2}, {"f": "2026-10-25", "c": "SocioMétrica", "PP": 32.4, "PSOE": 27.0, "VOX": 18.6, "SUMAR": 7.0}], "casas": [{"pollster": "SocioMétrica", "fecha": "2026-10-25", "PP": 32.4, "PSOE": 27.0, "VOX": 18.6, "SUMAR": 7.0}, {"pollster": "NC Report", "fecha": "2026-10-24", "PP": 33.1, "PSOE": 25.8, "VOX": 19.0, "SUMAR": 9.2}, {"pollster": "EM-Analytics", "fecha": "2026-10-23", "PP": 30.9, "PSOE": 26.7, "VOX": 19.0, "SUMAR": 7.5}, {"pollster": "Ateneo del Dato", "fecha": "2026-10-22", "PP": 31.1, "PSOE": 27.6, "VOX": 19.8, "SUMAR": 9.5}, {"pollster": "Sigma Dos", "fecha": "2026-10-22", "PP": 30.6, "PSOE": 26.1, "VOX": 19.9, "SUMAR": 10.2}, {"pollster": "IMOP", "fecha": "2026-10-16", "PP": 28.5, "PSOE": 27.1, "VOX": 20.0, "SUMAR": 10.8}, {"pollster": "Target Point", "fecha": "2026-10-09", "PP": 32.0, "PSOE": 25.9, "VOX": 18.7, "SUMAR": 10.3}, {"pollster": "40dB", "fecha": "2026-10-08", "PP": 31.9, "PSOE": 28.1, "VOX": 18.9, "SUMAR": 7.6}, {"pollster": "GAD3", "fecha": "2026-10-08", "PP": 31.4, "PSOE": 26.4, "VOX": 18.2, "SUMAR": 9.7}, {"pollster": "GESOP", "fecha": "2026-10-08", "PP": 28.7, "PSOE": 26.1, "VOX": 18.9, "SUMAR": 10.6}, {"pollster": "Hamalgama Métrica", "fecha": "2026-10-08", "PP": 33.4, "PSOE": 25.3, "VOX": 19.6, "SUMAR": 8.7}, {"pollster": "InvyMark", "fecha": "2026-10-08", "PP": 32.8, "PSOE": 28.0, "VOX": 18.8, "SUMAR": 9.5}, {"pollster": "DYM", "fecha": "2026-10-07", "PP": 34.0, "PSOE": 28.2, "VOX": 18.2, "SUMAR": 7.2}, {"pollster": "CIS", "fecha": "2026-10-06", "PP": 26.2, "PSOE": 30.2, "VOX": 17.5, "SUMAR": 10.3}]};
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const COL = {PP:"#1f77b4",PSOE:"#e03c31",VOX:"#63b32e",SUMAR:"#a259d9",ERC:"#ffb300","JxCAT - JUNTS":"#4dd0e1","EH Bildu":"#aed581","EAJ-PNV":"#00796b","B.N.G.":"#80cbc4",CCa:"#ff8a65","U.P.N.":"#5c6bc0","CUP-PR":"#fdd835","NC-bc":"#8d6e63"};
+const NOM = {VOX:"Vox",SUMAR:"Sumar+Podemos","JxCAT - JUNTS":"Junts","EAJ-PNV":"PNV","B.N.G.":"BNG","U.P.N.":"UPN","CUP-PR":"CUP","NC-bc":"Nueva Canarias"};
+const colr = p => COL[p] || "#9e9e9e";
+const nom = p => NOM[p] || p;
+const pct = x => x > 0 && x < 0.001 ? "<0,1 %" : (x * 100).toFixed(1).replace(".", ",") + " %";
+const MES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const fmt = s => { const d = new Date(s + "T00:00:00Z"); return d.getUTCDate() + " " + MES[d.getUTCMonth()]; };
+
+function hemiciclo(central) {
+  const orden = ["SUMAR","PSOE","ERC","EH Bildu","B.N.G.","EAJ-PNV","JxCAT - JUNTS","CCa","U.P.N.","PP","VOX"];
+  const parts = orden.filter(k => central[k]).concat(Object.keys(central).filter(k => !orden.includes(k) && central[k]));
+  const N = parts.reduce((a, k) => a + central[k], 0);
+  const rows = 10, r0 = 135, r1 = 325;
+  const radios = Array.from({length: rows}, (_, i) => r0 + (r1 - r0) * i / (rows - 1));
+  const sr = radios.reduce((a, b) => a + b, 0);
+  const cnt = radios.map(r => Math.round(N * r / sr));
+  cnt[rows - 1] += N - cnt.reduce((a, b) => a + b, 0);
+  const seats = [];
+  radios.forEach((r, i) => {
+    const n = cnt[i];
+    for (let j = 0; j < n; j++) seats.push({ang: n === 1 ? Math.PI / 2 : Math.PI - Math.PI * j / (n - 1), r});
+  });
+  seats.sort((a, b) => (b.ang - a.ang) || (a.r - b.r));
+  let k = 0, out = "";
+  parts.forEach(p => {
+    for (let c = 0; c < central[p]; c++) {
+      const s = seats[k++];
+      out += `<circle cx="${(350 + s.r * Math.cos(s.ang)).toFixed(1)}" cy="${(352 - s.r * Math.sin(s.ang)).toFixed(1)}" r="8" fill="${colr(p)}"><title>${esc(nom(p))}</title></circle>`;
+    }
+  });
+  const svg = `<svg viewBox="0 0 700 370" role="img" aria-label="Hemiciclo de escaños">${out}<text x="350" y="326" text-anchor="middle" class="big">${N}</text><text x="350" y="350" text-anchor="middle" class="ax">mayoría absoluta: 176</text></svg>`;
+  return {svg, parts};
+}
+
+function ring(p, c, t) {
+  const C = 2 * Math.PI * 40, d = C * Math.max(0, Math.min(1, p));
+  return `<div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="var(--line)" stroke-width="10"/><circle cx="50" cy="50" r="40" fill="none" stroke="${c}" stroke-width="10" stroke-dasharray="${d.toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/><text x="50" y="56" text-anchor="middle" class="rt">${pct(p)}</text></svg><span>${t}</span></div>`;
+}
+
+function histograma(H) {
+  const W = 700, Ht = 250, L = 12, Rr = 12, T = 16, B = 32;
+  const maxY = Math.max(...H.A, ...H.B, 1);
+  const x0 = H.edges[0], x1 = H.edges[H.edges.length - 1];
+  const X = v => L + (v - x0) / (x1 - x0) * (W - L - Rr);
+  const Y = v => T + (1 - v / maxY) * (Ht - T - B);
+  let s = "";
+  for (let i = 0; i < H.A.length; i++) {
+    const xa = X(H.edges[i]), w = Math.max(X(H.edges[i + 1]) - xa - 1, 1);
+    [[H.B, "#e03c31"], [H.A, "#1f77b4"]].forEach(([arr, c]) => {
+      if (arr[i] > 0) s += `<rect x="${xa.toFixed(1)}" y="${Y(arr[i]).toFixed(1)}" width="${w.toFixed(1)}" height="${(Ht - B - Y(arr[i])).toFixed(1)}" fill="${c}" opacity=".7"/>`;
+    });
+  }
+  for (let v = Math.ceil(x0 / 20) * 20; v <= x1; v += 20)
+    s += `<text x="${X(v).toFixed(1)}" y="${Ht - B + 16}" text-anchor="middle" class="ax">${v}</text>`;
+  s += `<line x1="${L}" x2="${W - Rr}" y1="${Ht - B}" y2="${Ht - B}" stroke="var(--line)"/>`;
+  const m = X(176);
+  s += `<line x1="${m.toFixed(1)}" x2="${m.toFixed(1)}" y1="${T}" y2="${Ht - B}" stroke="var(--fg)" stroke-dasharray="4 3"/><text x="${(m + 6).toFixed(1)}" y="${T + 8}" class="ax">176</text>`;
+  return `<svg viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Distribución de escaños por bloque">${s}</svg>`;
+}
+
+function grafico(S, desde) {
+  const W = 700, Ht = 300, L = 34, Rr = 128, T = 14, B = 28;
+  const P = ["PP", "PSOE", "VOX", "SUMAR"];
+  const pts = S.map(s => Object.assign({t: Date.parse(s.f + "T00:00:00Z")}, s));
+  const t0 = Date.parse(desde + "T00:00:00Z"), t1 = Math.max(...pts.map(p => p.t), t0 + 86400000);
+  const vals = pts.flatMap(p => P.map(k => p[k]));
+  const ymin = Math.max(0, Math.floor((Math.min(...vals) - 1) / 5) * 5);
+  const ymax = Math.ceil((Math.max(...vals) + 1) / 5) * 5;
+  const X = t => L + (t - t0) / (t1 - t0) * (W - L - Rr);
+  const Y = v => T + (1 - (v - ymin) / (ymax - ymin)) * (Ht - T - B);
+  let s = "";
+  for (let v = ymin; v <= ymax; v += 5)
+    s += `<line x1="${L}" x2="${W - Rr}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" stroke="var(--line)"/><text x="${L - 6}" y="${(Y(v) + 4).toFixed(1)}" text-anchor="end" class="ax">${v}</text>`;
+  for (let t = t0; t <= t1; t += 30 * 86400000)
+    s += `<text x="${X(t).toFixed(1)}" y="${Ht - 8}" text-anchor="middle" class="ax">${fmt(new Date(t).toISOString().slice(0, 10))}</text>`;
+  P.forEach(k => {
+    pts.forEach(p => { s += `<circle cx="${X(p.t).toFixed(1)}" cy="${Y(p[k]).toFixed(1)}" r="2.6" fill="${colr(k)}" opacity=".3"/>`; });
+    let d = "", last = null;
+    for (let t = t0; t <= t1; t += 2 * 86400000) {
+      const w = pts.filter(p => Math.abs(p.t - t) <= 7.5 * 86400000);
+      if (w.length < 2) continue;
+      const v = w.reduce((a, p) => a + p[k], 0) / w.length;
+      d += (d ? "L" : "M") + X(t).toFixed(1) + " " + Y(v).toFixed(1);
+      last = {t, v};
+    }
+    if (d) s += `<path d="${d}" fill="none" stroke="${colr(k)}" stroke-width="2.5" stroke-linejoin="round"/>`;
+    if (last) s += `<text x="${(X(last.t) + 6).toFixed(1)}" y="${(Y(last.v) + 4).toFixed(1)}" class="lab" fill="${colr(k)}">${esc(nom(k))} ${last.v.toFixed(1).replace(".", ",")}</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Evolución de las encuestas">${s}</svg>`;
+}
+
+$("sub").textContent = `Actualizado ${D.generado} · última encuesta ${D.ultima_encuesta} · ${D.n_sim} simulaciones · modelo experimental, no es una predicción`;
+const lider = Object.entries(D.central).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([p, n]) => `${nom(p)} ${n}`).join(" · ");
+$("lead").textContent = "Con la media actual de encuestas, el modelo estima: " + lider + ".";
+
+const H = hemiciclo(D.central);
+$("hemi").innerHTML = H.svg;
+$("leg").innerHTML = H.parts.map(p => `<span class="chip"><i style="background:${colr(p)}"></i>${esc(nom(p))} <b>${D.central[p]}</b></span>`).join("");
+
+$("rings").innerHTML =
+  ring(D.prob.pp_vox, "#1f77b4", "PP + Vox + UPN llegan a 176 escaños") +
+  ring(D.prob.izq, "#e03c31", "PSOE y socios llegan a 176 escaños") +
+  ring(D.prob.pp_gt_psoe, "#6b6b6b", "El PP queda por delante del PSOE");
+
+$("hist").innerHTML = histograma(D.hist);
+$("hleg").innerHTML =
+  `<span class="chip"><i style="background:#1f77b4"></i>PP + Vox + UPN (media ${Math.round(D.hist.mediaA)})</span>` +
+  `<span class="chip"><i style="background:#e03c31"></i>PSOE + Sumar + ERC + Junts + Bildu + PNV + BNG + CC (media ${Math.round(D.hist.mediaB)})</span>`;
+
+$("polls").innerHTML = grafico(D.serie, D.desde);
+$("pleg").innerHTML = ["PP", "PSOE", "VOX", "SUMAR"].map(p => `<span class="chip"><i style="background:${colr(p)}"></i>${esc(nom(p))}</span>`).join("");
+
+const mx = Math.max(...D.escanos.map(e => e.p95), 1);
+const w = v => (v / mx * 100) + "%";
+$("bars").innerHTML = D.escanos.map(e =>
+  `<div class="row"><span>${esc(nom(e.partido))}</span><div class="track"><div class="bar" style="width:${w(e.media)};background:${colr(e.partido)}"></div><div class="wh" style="left:${w(e.p5)};width:${w(e.p95 - e.p5)}"></div></div><span class="num">${e.media} (${e.p5}–${e.p95})</span></div>`).join("");
+
+const hd = ["Casa", "Fecha", "PP", "PSOE", "Vox", "Sumar+Podemos"];
+$("tab").innerHTML = "<tr>" + hd.map(x => `<th>${x}</th>`).join("") + "</tr>" +
+  D.casas.map(c => `<tr><td>${esc(c.pollster)}</td><td>${c.fecha}</td><td>${c.PP}</td><td>${c.PSOE}</td><td>${c.VOX}</td><td>${c.SUMAR}</td></tr>`).join("") +
+  `<tr><td><b>Media ponderada</b></td><td></td><td><b>${D.medias.PP}</b></td><td><b>${D.medias.PSOE}</b></td><td><b>${D.medias.VOX}</b></td><td><b>${D.medias.SUMAR}</b></td></tr>`;
+
+$("met").innerHTML = [
+  "Datos: resultados de 2023 por provincia (Ministerio del Interior, infoelectoral) y encuestas recopiladas de Wikipedia.",
+  "Agregador: última encuesta de cada casa en las 3 últimas semanas, ponderada por la raíz de la muestra y con un peso que se reduce a la mitad cada 14 días. Cada casa cuenta una vez (el CIS y sus recálculos, también).",
+  "Swing proporcional: los votos de cada partido en cada provincia se reescalan por el cociente entre su cuota actual y la de 2023. El resto de partidos se mantiene en su peso de 2023.",
+  "Reparto: D'Hondt por provincia con umbral del 3 %. Con los votos de 2023 reproduce los 350 escaños reales.",
+  `Montecarlo: ${D.n_sim} simulaciones con ruido nacional (${(D.sd_nac * 100).toFixed(0)} % relativo) y provincial (${(D.sd_prov * 100).toFixed(0)} %). Ambos valores se fijaron a mano y no están calibrados con un backtest, por lo que las probabilidades son orientativas.`,
+  "Límites: Sumar y Podemos van fusionados, lo que sobrestima a la izquierda alternativa; las listas nuevas no se modelan; el swing uniforme ignora diferencias regionales; sumar 176 escaños no equivale a formar gobierno."
+].map(x => `<li>${esc(x)}</li>`).join("");
+</script></body></html>
