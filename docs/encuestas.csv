@@ -1,18 +1,34 @@
 pollster,casa,fecha,muestra,PP,PSOE,VOX,SUMAR
+EM-Analytics,EM-Analytics/Electomanía,2026-11-23,9456.0,31.5,28.9,17.9,6.800000000000001
+SocioMétrica,SocioMétrica/El Español,2026-11-22,7266.0,32.1,28.7,18.4,5.9
+Target Point,Target Point/El Debate,2026-11-21,1206.0,31.5,28.8,17.4,8.3
+Cluster17,Cluster17/Agenda Pública,2026-11-21,1358.0,30.2,32.6,16.9,6.2
+GESOP,GESOP/Prensa Ibérica,2026-11-21,905.0,32.9,29.0,17.5,7.4
+Sondaxe,Sondaxe/La Voz de Galicia,2026-11-21,1000.0,31.1,28.2,17.3,6.9
 40dB,40dB/Prisa,2026-11-21,2000.0,31.9,31.6,16.9,5.1
-EM-Analytics,EM-Analytics/Electomanía,2026-11-21,7109.0,31.0,27.9,18.5,6.6000000000000005
+Sigma Dos,Sigma Dos/El Mundo,2026-11-21,4616.0,31.7,28.3,17.9,6.3
+40dB,40dB/Prisa,2026-11-21,7500.0,31.8,30.9,17.3,5.5
+EM-Analytics,EM-Analytics/Electomanía,2026-11-21,7982.0,31.2,28.4,18.3,6.7
+SW Demoscopia,SW Demoscopia/La Séptima,2026-11-21,12000.0,29.9,32.5,15.8,8.4
 SocioMétrica,SocioMétrica/El Español,2026-11-21,6842.0,32.3,28.5,18.8,5.9
+Celeste-Tel,Celeste-Tel/Onda Cero,2026-11-20,1100.0,32.2,28.1,18.9,6.5
+Sondaxe,Sondaxe/La Voz de Galicia,2026-11-20,1000.0,30.0,27.7,18.8,7.8
 40dB,40dB/Prisa,2026-11-20,2000.0,31.9,31.2,17.1,5.4
 Sigma Dos,Sigma Dos/El Mundo,2026-11-20,4511.0,31.5,28.0,18.3,6.4
 Ipsos,Ipsos/La Vanguardia,2026-11-20,1999.0,30.3,29.8,17.9,5.9
 Hamalgama Métrica,Hamalgama Métrica/Vozpópuli,2026-11-20,1000.0,32.2,25.4,20.6,7.7
-EM-Analytics,EM-Analytics/Electomanía,2026-11-20,6559.0,31.0,27.6,18.2,6.9
+EM-Analytics,EM-Analytics/Electomanía,2026-11-20,7109.0,31.0,27.9,18.5,6.6000000000000005
+SW Demoscopia,SW Demoscopia/La Séptima,2026-11-20,11500.0,29.9,32.5,15.9,8.4
+IMOP,IMOP/El Confidencial,2026-11-19,1200.0,31.7,27.4,18.3,8.1
 Winston,Winston/Artículo14,2026-11-19,1482.0,31.1,28.2,17.7,8.0
 DYM,DYM/Henneo,2026-11-19,1010.0,33.0,28.0,18.0,8.200000000000001
 GAD3,GAD3/Vocento,2026-11-19,1501.0,31.1,28.4,18.1,7.6
 More in Common,More in Common,2026-11-19,2315.0,28.9,28.0,19.8,8.799999999999999
+Sondaxe,Sondaxe/La Voz de Galicia,2026-11-19,1000.0,29.5,27.9,19.8,6.1000000000000005
 40dB,40dB/Prisa,2026-11-19,2000.0,32.2,30.2,17.6,5.199999999999999
 Sigma Dos,Sigma Dos/El Mundo,2026-11-19,4561.0,31.2,27.6,18.9,6.3
+EM-Analytics,EM-Analytics/Electomanía,2026-11-19,6559.0,31.0,27.6,18.2,6.9
+SW Demoscopia,SW Demoscopia/La Séptima,2026-11-19,11000.0,29.6,32.1,16.3,8.5
 Sondaxe,Sondaxe/La Voz de Galicia,2026-11-18,1000.0,29.3,27.8,19.7,6.2
 40dB,40dB/Prisa,2026-11-18,2000.0,32.4,30.4,17.2,5.4
 Sigma Dos,Sigma Dos/El Mundo,2026-11-18,4491.0,31.0,27.1,19.4,6.3
@@ -22,6 +38,8 @@ Public First,Public First/Politico,2026-11-17,2454.0,29.5,27.2,19.6,8.1000000000
 Sondaxe,Sondaxe/La Voz de Galicia,2026-11-17,1000.0,28.5,27.8,19.6,6.3
 40dB,40dB/Prisa,2026-11-17,2000.0,32.2,30.7,17.0,5.2
 Sigma Dos,Sigma Dos/El Mundo,2026-11-17,4511.0,30.7,26.7,19.7,6.2
+CIS,CIS (Ateneo del Dato),2026-11-17,8034.0,30.0,29.4,18.5,8.299999999999999
+CIS,CIS,2026-11-17,8034.0,24.7,34.4,15.6,7.2
 EM-Analytics,EM-Analytics/Electomanía,2026-11-17,4927.0,30.8,27.0,18.9,7.3999999999999995
 SW Demoscopia,SW Demoscopia/La Séptima,2026-11-17,10000.0,29.3,31.9,16.4,8.9
 Sondaxe,Sondaxe/La Voz de Galicia,2026-11-16,1000.0,29.0,27.0,19.4,6.9
