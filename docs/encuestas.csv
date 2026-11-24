@@ -1,5 +1,11 @@
 pollster,casa,fecha,muestra,PP,PSOE,VOX,SUMAR
+Data10,Data10/Okdiario,2026-11-23,1500.0,31.8,28.3,18.4,7.5
+GESOP,GESOP/The Adelaide Review,2026-11-23,902.0,31.9,28.2,18.3,8.1
+AtlasIntel,AtlasIntel/PollsterGraph,2026-11-23,1045.0,29.1,29.8,17.8,8.6
+Sigma Dos,Sigma Dos/El Mundo,2026-11-23,5252.0,31.9,28.6,17.8,6.1
 EM-Analytics,EM-Analytics/Electomanía,2026-11-23,9456.0,31.5,28.9,17.9,6.800000000000001
+SW Demoscopia,SW Demoscopia/La Séptima,2026-11-23,13000.0,30.3,32.9,15.3,8.3
+SocioMétrica,SocioMétrica/El Español,2026-11-23,7781.0,32.4,29.0,18.1,6.0
 SocioMétrica,SocioMétrica/El Español,2026-11-22,7266.0,32.1,28.7,18.4,5.9
 Target Point,Target Point/El Debate,2026-11-21,1206.0,31.5,28.8,17.4,8.3
 Cluster17,Cluster17/Agenda Pública,2026-11-21,1358.0,30.2,32.6,16.9,6.2
@@ -11,7 +17,9 @@ Sigma Dos,Sigma Dos/El Mundo,2026-11-21,4616.0,31.7,28.3,17.9,6.3
 EM-Analytics,EM-Analytics/Electomanía,2026-11-21,7982.0,31.2,28.4,18.3,6.7
 SW Demoscopia,SW Demoscopia/La Séptima,2026-11-21,12000.0,29.9,32.5,15.8,8.4
 SocioMétrica,SocioMétrica/El Español,2026-11-21,6842.0,32.3,28.5,18.8,5.9
+Ateneo del Dato,Ateneo del Dato/elDiario.es,2026-11-20,2000.0,32.1,30.8,17.6,6.7
 Celeste-Tel,Celeste-Tel/Onda Cero,2026-11-20,1100.0,32.2,28.1,18.9,6.5
+NC Report,NC Report/La Razón,2026-11-20,1000.0,32.3,27.2,19.0,6.8
 Sondaxe,Sondaxe/La Voz de Galicia,2026-11-20,1000.0,30.0,27.7,18.8,7.8
 40dB,40dB/Prisa,2026-11-20,2000.0,31.9,31.2,17.1,5.4
 Sigma Dos,Sigma Dos/El Mundo,2026-11-20,4511.0,31.5,28.0,18.3,6.4
